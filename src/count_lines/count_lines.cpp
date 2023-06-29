@@ -40,12 +40,16 @@ std::size_t CountLines(const fs::path& filename, bool ignore_empty) noexcept {
 int main(int argc, char* argv[]) try {
   nw::args _(argc, argv);
 
+  bool absolute_path;
   bool include_cpp;
   bool ignore_empty;
 
   po::options_description desc("Usage");
   // clang-format off
   desc.add_options()("help,h", "Produce help message")
+    ("abs",
+      po::value<bool>(&absolute_path)->default_value(false),
+      "Absolute path.")
     ("cpp",
       po::value<bool>(&include_cpp)->default_value(false),
       "Include C++ file extensions.")
@@ -122,7 +126,12 @@ int main(int argc, char* argv[]) try {
 
   if (vm.count("input")) {
     for (const auto& input : vm["input"].as<std::vector<std::string>>()) {
-      fs::path path{fs::canonical(input)};
+      fs::path path;
+      if (absolute_path) {
+        path = fs::canonical(input);
+      } else {
+        path = input;
+      }
       auto status = fs::status(path);
       if (!fs::exists(status)) {
         nw::cerr << "File " << path << " doesn't exist!" << std::endl;
