@@ -1,4 +1,12 @@
-﻿#include <format>
+﻿#ifdef USE_FMTLIB
+#include <fmt/core.h>
+
+namespace cpp = fmt;
+#else
+#include <format>
+
+namespace cpp = std;
+#endif
 #include <set>
 
 #include <boost/algorithm/string/trim.hpp>
@@ -112,13 +120,13 @@ int main(int argc, char* argv[]) try {
     }
   }
 
-  nw::cout << std::format("cpp         : {}\n", include_cpp);
+  nw::cout << cpp::format("cpp         : {}\n", include_cpp);
   nw::cout << "ext         :";
   for (const auto& ext : exts) {
     nw::cout << " " << ext;
   }
   nw::cout << "\n";
-  nw::cout << std::format("ignore-empty: {}\n", ignore_empty);
+  nw::cout << cpp::format("ignore-empty: {}\n", ignore_empty);
 
   nw::nowide_filesystem();
 
