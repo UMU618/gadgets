@@ -21,28 +21,37 @@ namespace nw = boost::nowide;
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
-std::size_t CountLines(const fs::path& filename, bool ignore_empty) noexcept {
+struct FileInfo {
+  std::size_t lines;
+  std::size_t column_limit;
+};
+
+FileInfo CountLines(const fs::path& filename, bool ignore_empty) noexcept {
+  FileInfo info{};
+
   nw::ifstream f(filename);
   if (!f) {
     nw::cerr << "Can't open " << filename << std::endl;
-    return 0;
+    return info;
   }
 
-  std::size_t total_lines = 0;
   std::string line;
   while (f) {
     if (std::getline(f, line)) {
+      if (info.column_limit < line.size()) {
+        info.column_limit = line.size();
+      }
       std::string_view line_view{line};
       if (ignore_empty) {
         line_view = boost::algorithm::trim_copy(line_view);
       }
       if (!line_view.empty()) {
-        ++total_lines;
+        ++info.lines;
       }
     }
   }
   f.close();
-  return total_lines;
+  return info;
 }
 
 int main(int argc, char* argv[]) try {
@@ -170,17 +179,23 @@ int main(int argc, char* argv[]) try {
 
   std::size_t total_files{0};
   std::size_t total_lines{0};
+  std::size_t column_limit{};
   for (const auto& filename : filenames) {
-    std::size_t lines = CountLines(filename, ignore_empty);
+    FileInfo info = CountLines(filename, ignore_empty);
     ++total_files;
-    total_lines += lines;
-    nw::cout << "File " << filename << " has " << lines
-             << (1 < lines ? " lines" : " line") << std::endl;
+    total_lines += info.lines;
+    if (column_limit < info.column_limit) {
+      column_limit = info.column_limit;
+    }
+    nw::cout << "File " << filename << " has " << info.lines
+             << (1 < info.lines ? " lines" : " line") << ", column limit "
+             << info.column_limit << std::endl;
   }
 
   if (0 != total_files) {
     nw::cout << "Total files: " << total_files
-             << "\nTotal lines: " << total_lines << std::endl;
+             << "\nTotal lines: " << total_lines
+             << "\nColumnLimit: " << column_limit << std::endl;
   }
 } catch (const std::exception& e) {
   nw::cerr << "Error: " << e.what() << '\n';
