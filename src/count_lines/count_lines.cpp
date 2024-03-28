@@ -9,6 +9,7 @@ namespace cpp = std;
 #endif
 #include <set>
 
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/args.hpp>
@@ -21,6 +22,10 @@ namespace nw = boost::nowide;
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
+using nw::cerr;
+using nw::cout;
+using nw::ifstream;
+
 struct FileInfo {
   std::size_t lines;
   std::size_t column_limit;
@@ -29,9 +34,9 @@ struct FileInfo {
 FileInfo CountLines(const fs::path& filename, bool ignore_empty) noexcept {
   FileInfo info{};
 
-  nw::ifstream f(filename);
+  ifstream f(filename);
   if (!f) {
-    nw::cerr << "Can't open " << filename << std::endl;
+    cout << "Can't open " << filename << '\n';
     return info;
   }
 
@@ -41,17 +46,28 @@ FileInfo CountLines(const fs::path& filename, bool ignore_empty) noexcept {
       if (info.column_limit < line.size()) {
         info.column_limit = line.size();
       }
-      std::string_view line_view{line};
       if (ignore_empty) {
+        if (line.empty()) {
+          continue;
+        }
+        std::string_view line_view{line};
         line_view = boost::algorithm::trim_copy(line_view);
+        if (line_view.empty()) {
+          continue;
+        }
       }
-      if (!line_view.empty()) {
-        ++info.lines;
-      }
+      ++info.lines;
     }
   }
   f.close();
   return info;
+}
+
+std::string GetLowerCaseExtension(std::string ext) {
+  if (ext != ".C") {
+    boost::algorithm::to_lower(ext);
+  }
+  return ext;
 }
 
 int main(int argc, char* argv[]) try {
@@ -89,11 +105,11 @@ int main(int argc, char* argv[]) try {
   po::notify(vm);
 
   if (vm.count("help")) {
-    nw::cout << "count_lines @ 2022-12-25\n\n"
-             << desc
-             << "\nExamples:\n"
-                "  count_lines --cpp=1 C:\\cpp\\\n"
-                "  count_lines --ext \"\" -i C:\\cpp\\ C:\\js\\\n";
+    cout << "count_lines @ 2022-12-25\n\n"
+         << desc
+         << "\nExamples:\n"
+            "  count_lines --cpp=1 C:\\cpp\\\n"
+            "  count_lines --ext \"\" -i C:\\cpp\\ C:\\js\\\n";
     return EXIT_SUCCESS;
   }
 
@@ -119,7 +135,7 @@ int main(int argc, char* argv[]) try {
 
   if (vm.count("ext")) {
     for (const auto& _ext : vm["ext"].as<std::vector<std::string>>()) {
-      auto ext = boost::algorithm::trim_copy(_ext);
+      auto ext = GetLowerCaseExtension(boost::algorithm::trim_copy(_ext));
       // Support --ext "" to count those files without extension
       if (ext.empty() || ext.starts_with('.')) {
         exts.insert(ext);
@@ -129,13 +145,13 @@ int main(int argc, char* argv[]) try {
     }
   }
 
-  nw::cout << cpp::format("cpp         : {}\n", include_cpp);
-  nw::cout << "ext         :";
+  cout << cpp::format("cpp         : {}\n", include_cpp);
+  cout << "ext         :";
   for (const auto& ext : exts) {
-    nw::cout << " " << ext;
+    cout << " " << ext;
   }
-  nw::cout << "\n";
-  nw::cout << cpp::format("ignore-empty: {}\n", ignore_empty);
+  cout << "\n";
+  cout << cpp::format("ignore-empty: {}\n", ignore_empty);
 
   nw::nowide_filesystem();
 
@@ -151,27 +167,29 @@ int main(int argc, char* argv[]) try {
       }
       auto status = fs::status(path);
       if (!fs::exists(status)) {
-        nw::cerr << "File " << path << " doesn't exist!" << std::endl;
+        cout << "File " << path << " doesn't exist!" << '\n';
         continue;
       }
 
       if (fs::is_directory(status)) {
         for (const auto& child : fs::recursive_directory_iterator(path)) {
           if (!fs::is_directory(child.status())) {
-            if (exts.contains(child.path().extension().string())) {
+            if (exts.contains(
+                    GetLowerCaseExtension(child.path().extension().string()))) {
               filenames.insert(child.path());
             } else {
 #if _DEBUG
-              nw::cout << "Skip file " << child.path() << std::endl;
+              cout << "Skip file " << child.path() << '\n';
 #endif
             }
           }
         }
-      } else if (exts.contains(path.extension().string())) {
+      } else if (exts.contains(
+                     GetLowerCaseExtension(path.extension().string()))) {
         filenames.insert(path);
       } else {
 #if _DEBUG
-        nw::cout << "Skip file " << path << std::endl;
+        cout << "Skip file " << path << '\n';
 #endif
       }
     }
@@ -187,17 +205,16 @@ int main(int argc, char* argv[]) try {
     if (column_limit < info.column_limit) {
       column_limit = info.column_limit;
     }
-    nw::cout << "File " << filename << " has " << info.lines
-             << (1 < info.lines ? " lines" : " line") << ", column limit "
-             << info.column_limit << std::endl;
+    cout << "File " << filename << " has " << info.lines
+         << (1 < info.lines ? " lines" : " line") << ", column limit "
+         << info.column_limit << '\n';
   }
 
   if (0 != total_files) {
-    nw::cout << "Total files: " << total_files
-             << "\nTotal lines: " << total_lines
-             << "\nColumnLimit: " << column_limit << std::endl;
+    cout << "Total files: " << total_files << "\nTotal lines: " << total_lines
+         << "\nColumnLimit: " << column_limit << '\n';
   }
 } catch (const std::exception& e) {
-  nw::cerr << "Error: " << e.what() << '\n';
+  cerr << "Error: " << e.what() << '\n';
   return EXIT_FAILURE;
 }
