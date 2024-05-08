@@ -3,5 +3,12 @@ tmp/
 *.bak
 *.tmp
 
+# VS
+.vs/
+bin/
+tmp/
+*.vcxproj.user
+*.aps
+
 # macOS
 .DS_Store
