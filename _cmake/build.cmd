@@ -9,7 +9,7 @@ if not exist "%VCPKG_ROOT%\vcpkg.exe" (
 )
 
 pushd "%~dp0"
-cmake -B tmp -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake" -G "NMake Makefiles JOM"
+cmake -S . -B tmp -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake" -G Ninja
 if %ERRORLEVEL% neq 0 goto skip
 cmake --build tmp
 :skip
