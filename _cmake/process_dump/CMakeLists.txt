@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.19)
 
-add_executable(process_dump ../../src/process_dump/process_dump.cpp)
+add_executable(process_dump ../../src/umutech/process_dump/process_dump.cpp)
 set_property(TARGET process_dump PROPERTY CXX_STANDARD 20)
 
 add_definitions(-DUSE_FMTLIB)
