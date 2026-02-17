@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\process_dump\process_dump.cpp">
+    <ClCompile Include="..\..\src\umutech\process_dump\process_dump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

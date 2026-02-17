@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\count_lines\count_lines.cpp">
+    <ClCompile Include="..\..\src\umutech\count_lines\count_lines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
