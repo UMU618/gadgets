@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="count_lines/count_lines.vcxproj" Id="8bed4bae-9354-4435-aca5-7b33c26afac5" />
+  <Project Path="process_dump/process_dump.vcxproj" Id="6785e212-f947-49de-bc26-aa9ae471f701" />
+</Solution>
