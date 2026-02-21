@@ -3,13 +3,12 @@ boost_dep = dependency(
     modules: ['algorithm', 'filesystem', 'nowide'],
     required: true,
 )
-fmt_dep = dependency('fmt', required: true)
 
-all_deps = [boost_dep, fmt_dep]
+all_deps = [boost_dep]
 
-process_dump = executable(
-    'process_dump',
-    '../../src/umutech/process_dump/process_dump.cpp',
+sln2slnx = executable(
+    'sln2slnx',
+    '../../src/umutech/sln2slnx/sln2slnx.cpp',
     dependencies: all_deps,
     install: true,
     build_by_default: true,

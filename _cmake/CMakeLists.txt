@@ -6,3 +6,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/bin/Release)
 
 add_subdirectory(count_lines)
 add_subdirectory(process_dump)
+add_subdirectory(sln2slnx)

@@ -1,4 +1,4 @@
-// You can compile this code, and run it under other OS, but it will only
+﻿// You can compile this code, and run it under other OS, but it will only
 // process Windows' .dmp files properly.
 
 #include <set>
@@ -96,6 +96,13 @@ int main(int argc, char* argv[]) try {
   boost::nowide::nowide_filesystem();
 
   cout << std::showbase;
+
+  if (argc != 2) {
+    cout << "Process .dmp files\n\n"
+            "Usage: "
+         << fs::path{argv[0]}.stem().string() << " <file_or_directory>\n";
+    return EXIT_SUCCESS;
+  }
 
   std::set<fs::path> filenames;
   for (int i = 1; i < argc; ++i) {

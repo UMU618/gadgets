@@ -5,12 +5,12 @@ boost_dep = dependency(
 )
 fmt_dep = dependency('fmt', required: true)
 
-count_lines_deps = [boost_dep, fmt_dep]
+all_deps = [boost_dep, fmt_dep]
 
 count_lines = executable(
     'count_lines',
     '../../src/umutech/count_lines/count_lines.cpp',
-    dependencies: count_lines_deps,
+    dependencies: all_deps,
     install: true,
     build_by_default: true,
     install_dir: executable_output_dir,

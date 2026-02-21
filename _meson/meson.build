@@ -2,6 +2,7 @@ project(
     'gadgets',
     'cpp',
     version: '0.1',
+    meson_version : '>= 1.10.1',
     default_options: [
         'cpp_std=c++20',
         'default_library=shared',
@@ -23,3 +24,4 @@ endif
 
 subdir('count_lines')
 subdir('process_dump')
+subdir('sln2slnx')
