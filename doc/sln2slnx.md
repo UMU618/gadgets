@@ -1,6 +1,4 @@
-# process_dump
-
-Pick out the kernel dump files from .dmp files.
+# sln2slnx
 
 ```sh
 vcpkg install boost-algorithm boost-filesystem boost-nowide
