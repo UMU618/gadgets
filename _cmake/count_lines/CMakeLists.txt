@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 3.19)
-
 add_executable(count_lines ../../src/umutech/count_lines/count_lines.cpp)
 set_property(TARGET count_lines PROPERTY CXX_STANDARD 20)
 

@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 3.19)
-
 add_executable(sln2slnx ../../src/umutech/sln2slnx/sln2slnx.cpp)
 set_property(TARGET sln2slnx PROPERTY CXX_STANDARD 20)
 
