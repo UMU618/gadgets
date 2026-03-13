@@ -430,14 +430,29 @@ std::string BuildSlnx(const ConfigurationInfo& config_info,
 bool ProcessTargetFile(const fs::path& filename) {
   cout << "Processing " << filename << '\n';
 
-  ifstream input(filename, std::ios::binary);
+  // UMU: Slow
+  // ifstream input(filename, std::ios::in | std::ios::binary);
+  // if (!input.is_open()) {
+  //  cerr << "  Failed to open " << filename << '\n';
+  //  return false;
+  // }
+  // std::string content((std::istreambuf_iterator<char>(input)),
+  //                     std::istreambuf_iterator<char>());
+
+  ifstream input(filename, std::ios::in | std::ios::binary | std::ios::ate);
   if (!input.is_open()) {
     cerr << "  Failed to open " << filename << '\n';
     return false;
   }
-
-  std::string content((std::istreambuf_iterator<char>(input)),
-                      std::istreambuf_iterator<char>());
+  std::string content;
+  if (std::streamsize size = input.tellg(); size) {
+    content.resize(size);
+    input.seekg(0, std::ios::beg);
+    if (!input.read(content.data(), size)) {
+      cerr << "  Failed to read " << filename << '\n';
+      return false;
+    }
+  }
   input.close();
 
   SolutionParser parser(std::move(content));
@@ -471,7 +486,7 @@ int main(int argc, char* argv[]) try {
   nw::args _(argc, argv);
   nw::nowide_filesystem();
 
-  if (argc != 2) {
+  if (argc < 2) {
     cout << "Convert .sln files to .slnx\n\n"
             "Usage:\n  "
          << fs::path{argv[0]}.stem().string()

@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) try {
 
   cout << std::showbase;
 
-  if (argc != 2) {
+  if (argc < 2) {
     cout << "Process .dmp files\n\n"
             "Usage: "
          << fs::path{argv[0]}.stem().string() << " <file_or_directory>\n";
