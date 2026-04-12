@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) try {
   po::variables_map vm;
   po::parsed_options parsed =
       po::command_line_parser(argc, argv).options(desc).positional(p).run();
-  po::store(parsed, vm);
+  po::store(parsed, vm, true);
   po::notify(vm);
 
   if (vm.count("help")) {

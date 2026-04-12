@@ -1,5 +1,7 @@
 ﻿// You can compile this code, and run it under other OS, but it will only
 // process Windows' .dmp files properly.
+#define _HAS_EXCEPTIONS 0
+#define BOOST_EXCEPTION_DISABLE
 
 #include <set>
 
@@ -91,7 +93,7 @@ void ProcessDumpFile(const fs::path& filename) {
   }
 }
 
-int main(int argc, char* argv[]) try {
+int main(int argc, char* argv[]) {
   boost::nowide::args _(argc, argv);
   boost::nowide::nowide_filesystem();
 
@@ -112,8 +114,4 @@ int main(int argc, char* argv[]) try {
   for (const auto& filename : filenames) {
     ProcessDumpFile(filename);
   }
-} catch (const std::exception& e) {
-  cerr << "Error: " << e.what() << '\n';
-} catch (...) {
-  cerr << "Unknown error\n";
 }

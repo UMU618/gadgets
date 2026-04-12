@@ -1,5 +1,7 @@
 ﻿// You can compile this code, and run it under other OS, but it will only
 // process MSVC's .sln files.
+#define _HAS_EXCEPTIONS 0
+#define BOOST_EXCEPTION_DISABLE
 
 #include <set>
 #include <string>
@@ -482,7 +484,7 @@ bool ProcessTargetFile(const fs::path& filename) {
 
 }  // namespace
 
-int main(int argc, char* argv[]) try {
+int main(int argc, char* argv[]) {
   nw::args _(argc, argv);
   nw::nowide_filesystem();
 
@@ -505,10 +507,4 @@ int main(int argc, char* argv[]) try {
   for (const auto& filename : filenames) {
     ProcessTargetFile(filename);
   }
-} catch (const std::exception& e) {
-  cerr << "Error: " << e.what() << '\n';
-  return EXIT_FAILURE;
-} catch (...) {
-  cerr << "Unknown error\n";
-  return EXIT_FAILURE;
 }
