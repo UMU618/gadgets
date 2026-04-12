@@ -115,6 +115,7 @@
       <Optimization>Full</Optimization>
       <UseFullPaths>false</UseFullPaths>
       <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +148,7 @@
       <Optimization>Full</Optimization>
       <UseFullPaths>false</UseFullPaths>
       <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
